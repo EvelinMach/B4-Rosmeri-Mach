@@ -6,7 +6,7 @@ public class Proyectofinal4tobloque {
         ventana inicio = new ventana();
         inicio.setBounds(330, 150, 550, 400);
         inicio.setTitle("Inicio Sesion");
-        inicio.iniciarComponentes();;
+        inicio.iniciarComponentes();
     }
 
 }
