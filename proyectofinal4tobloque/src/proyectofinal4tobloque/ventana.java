@@ -397,6 +397,10 @@ public class ventana extends JFrame {
                 char genero = txtGenero.getText().charAt(0);
                 String nit = txtNIT.getText();
                 guardarCliente(nombre, edad, genero, nit);
+                txtNombreNuevo.setText("");
+                txtNuevaEdad.setText("");
+                txtGenero.setText("");
+                txtNIT.setText("");
 
             }
 
@@ -419,19 +423,50 @@ public class ventana extends JFrame {
         };
         btnvolverCliente.addActionListener(volver);
         panelNuevoCliente.repaint();
-        
+
     }
 
-    public void guardarCliente(String nombre, int edad, char genero, String nit) {
-
-        if (ConteoClientes < misClientes.length) {
-            misClientes[ConteoClientes] = new clientes(nit, nombre, edad, genero);
-            ConteoClientes++;
-            JOptionPane.showMessageDialog(null, "Cliente exitosamente almacenado");
+    public boolean guardarCliente(String nombre, int edad, char genero, String nit) {
+        boolean guardado = false;
+        if (nit.equals("") || nombre.equals("")) {
+            JOptionPane.showMessageDialog(null, "debe de llenar todos los campos");
         } else {
-            JOptionPane.showMessageDialog(null, "Ya no se pueden almacenar mas clientes");
-        }
+            if (ComprobarDuplicadosClientes(nit)) {
+                JOptionPane.showMessageDialog(null, "este NIT esta en existencia");
+            } else {
+                boolean vacio = false;
+                int posicion = -1;
+                for (int i = 0; i < misClientes.length - 1; i++) {
+                    if (misClientes[i] == null) {
+                        vacio = true;
+                        posicion = i;
+                        break;
+                    }
+                }
+                if (vacio) {
+                    misClientes[posicion] = new clientes(nit, nombre, edad, genero);
+                    JOptionPane.showMessageDialog(null, "El registro fue exitoso");
+                    guardado = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "almacenamiento lleno");
+                }
 
+            }
+        }
+        return guardado;
     }
 
+    public boolean ComprobarDuplicadosClientes(String nit) {
+        boolean repeticion = false;
+        for (int i = 0; i <= misClientes.length - 1; i++) {
+            if (misClientes[i] != null) {
+                if (misClientes[i].getNit().equals(nit)) {
+                    repeticion = true;
+                    break;
+                }
+            }
+        }
+        return repeticion;
+
+    }
 }
