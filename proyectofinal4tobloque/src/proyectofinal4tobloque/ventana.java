@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -86,7 +85,8 @@ public class ventana extends JFrame {
                 String contra = txtContra.getText();
                 if (buscarUsuario(usuario, contra)) {
                     panelInicioSesion.setVisible(false);
-
+                    buscarUsuario(usuario, contra);
+                    componentesClientes();
                 }
 
             }
@@ -102,6 +102,7 @@ public class ventana extends JFrame {
         ActionListener NuevoRegistro = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                componentesUsuario();
                 panelInicioSesion.setVisible(false);
                 componentesUsuario();
             }
@@ -185,13 +186,10 @@ public class ventana extends JFrame {
                 String nombre = txtNombreNuevo.getText();
                 String contra = txtContraNueva.getText();
                 //limpiar casillas
-                if (guardarRegistro(usuario, nombre, contra)) {
-                    txtUsuarioNuevo.setText("");
-                    txtNombreNuevo.setText("");
-                    txtContraNueva.setText("");
-
-                }
-
+                guardarRegistro(usuario, nombre, contra);
+                txtUsuarioNuevo.setText("");
+                txtNombreNuevo.setText("");
+                txtContraNueva.setText("");
             }
 
         };
@@ -205,15 +203,17 @@ public class ventana extends JFrame {
         ActionListener volver = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelNuevoUsuario.setVisible(false);
                 componentesInicio();
+                panelNuevoUsuario.setVisible(false);
+
             }
 
         };
         btnVolver.addActionListener(volver);
+        panelNuevoUsuario.repaint();
     }
 
-    public boolean guardarRegistro(String usuario, String nombre, String contra) {
+    public void guardarRegistro(String usuario, String nombre, String contra) {
         boolean guardar = false;
         if (usuario.equals("") || nombre.equals("") || contra.equals("")) {
             JOptionPane.showMessageDialog(null, "Debe de llenar todos los campos");
@@ -223,7 +223,7 @@ public class ventana extends JFrame {
             } else {
                 boolean vacio = false;
                 int posicion = -1;
-                for (int i = 0; i <= 9; i++) {
+                for (int i = 0; i <= misUsuarios.length; i++) {
                     if (misUsuarios[i] == null) {
                         vacio = true;
                         posicion = i;
@@ -240,7 +240,6 @@ public class ventana extends JFrame {
                 }
             }
         }
-        return guardar;
 
     }
 
@@ -312,22 +311,22 @@ public class ventana extends JFrame {
         //Ingresar nuevo cliente boton
         JButton btnCrearCliente = new JButton("Crear Cliente");
         btnCrearCliente.setFont(new Font("arial", Font.ITALIC, 18));
-        btnCrearCliente.setBounds(100, 250, 180, 30);
+        btnCrearCliente.setBounds(50, 20, 150, 20);
         panelClientes.add(btnCrearCliente);
         ActionListener NuevoCliente = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 componentesNuevoCliente();
                 panelClientes.setVisible(false);
+                panelClientes.repaint();
             }
         };
         btnCrearCliente.addActionListener(NuevoCliente);
-        // boton de volver
-
-        JButton btnvolverCliente = new JButton("Volver");
-        btnvolverCliente.setFont(new Font("arial", Font.ITALIC, 18));
-        btnvolverCliente.setBounds(240, 250, 180, 30);
-        panelClientes.add(btnvolverCliente);
+        panelClientes.repaint();
+        //boton volver
+        JButton btnregresar = new JButton("Volver");
+        btnregresar.setBounds(240, 20, 150, 20);
+        panelClientes.add(btnregresar);
         ActionListener volver = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -335,8 +334,8 @@ public class ventana extends JFrame {
                 panelClientes.setVisible(false);
             }
         };
-        btnvolverCliente.addActionListener(volver);
-
+        btnregresar.addActionListener(volver);
+        panelClientes.repaint();
     }
 
     public void componentesNuevoCliente() {
@@ -344,7 +343,7 @@ public class ventana extends JFrame {
         panelNuevoCliente.setLayout(null);
         this.getContentPane().add(panelNuevoCliente);
         this.setTitle("Crear nuevo cliente");
-        
+
         JLabel nuevoCliente = new JLabel("Ingrese un nombre");
         nuevoCliente.setFont(new Font("arial", Font.ITALIC, 15));
         nuevoCliente.setBounds(50, 25, 150, 15);
@@ -355,7 +354,7 @@ public class ventana extends JFrame {
         EdadNueva.setBounds(50, 55, 150, 15);
         panelNuevoCliente.add(EdadNueva);
 
-        JLabel genero = new JLabel("Eligir sexo");
+        JLabel genero = new JLabel("Genero del cliente");
         genero.setFont(new Font("arial", Font.ITALIC, 15));
         genero.setBounds(50, 85, 150, 15);
         panelNuevoCliente.add(genero);
@@ -375,18 +374,10 @@ public class ventana extends JFrame {
         panelNuevoCliente.add(txtNuevaEdad);
         txtNuevaEdad.setFont(new Font("arial", Font.ITALIC, 15));
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-       
-            
-        
+        JTextField txtGenero = new JTextField();
+        txtGenero.setBounds(230, 85, 220, 20);
+        panelNuevoCliente.add(txtGenero);
+        txtGenero.setFont(new Font("arial", Font.ITALIC, 15));
 
         JTextField txtNIT = new JTextField();
         txtNIT.setBounds(230, 115, 220, 20);
@@ -396,61 +387,51 @@ public class ventana extends JFrame {
         JButton btnIntegrar = new JButton("Agregar");
         btnIntegrar.setFont(new Font("arial", Font.ITALIC, 18));
         btnIntegrar.setBounds(260, 200, 125, 30);
-        panelNuevoUsuario.add(btnIntegrar);
+        panelNuevoCliente.add(btnIntegrar);
 
         ActionListener agregarCliente = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nombre = txtNombreNuevo.getText();
-                String edad = txtNuevaEdad.getText();
+                int edad = Integer.parseInt(txtNuevaEdad.getText());
+                char genero = txtGenero.getText().charAt(0);
                 String nit = txtNIT.getText();
-                guardarCliente(nombre, edad, nit, genero);
+                guardarCliente(nombre, edad, genero, nit);
+
             }
 
         };
         btnIntegrar.addActionListener(agregarCliente);
+        panelNuevoCliente.repaint();
+
+        // boton de volver
+        JButton btnvolverCliente = new JButton("Volver");
+        btnvolverCliente.setFont(new Font("arial", Font.ITALIC, 18));
+        btnvolverCliente.setBounds(240, 250, 180, 30);
+        panelNuevoCliente.add(btnvolverCliente);
+        ActionListener volver = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelNuevoCliente.setVisible(false);
+                componentesClientes();
+
+            }
+        };
+        btnvolverCliente.addActionListener(volver);
+        panelNuevoCliente.repaint();
+        
     }
 
     public void guardarCliente(String nombre, int edad, char genero, String nit) {
-        boolean almacenar = false;
-        if (nombre.equals("") || edad == 0 || nit.equals("")) {
-            JOptionPane.showMessageDialog(null, "Debe de llenar todos los campos");
+
+        if (ConteoClientes < misClientes.length) {
+            misClientes[ConteoClientes] = new clientes(nit, nombre, edad, genero);
+            ConteoClientes++;
+            JOptionPane.showMessageDialog(null, "Cliente exitosamente almacenado");
         } else {
-            if (comprobarDuplicadosClientes(nit)) {
-                JOptionPane.showMessageDialog(null, "Este cliente ya existe");
-            } else {
-                boolean vacio = false;
-                int posicion = -1;
-                for (int i = 0; i <= misClientes.length; i++) {
-                    if (misClientes[i] == null) {
-                        vacio = true;
-                        posicion = i;
-                        break;
-                    }
-                }
-
-                if (vacio) {
-                    misClientes[posicion] = new clientes(nit, nombre, edad, genero);
-                    JOptionPane.showMessageDialog(null, "Cliente exitosamente almacenado");
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Ya no se pueden almacenar mas clientes");
-                }
-            }
+            JOptionPane.showMessageDialog(null, "Ya no se pueden almacenar mas clientes");
         }
 
-    }
-
-    public boolean comprobarDuplicadosClientes(String nit) {
-        boolean duplicado = false;
-        for (int i = 0; i <= misClientes.length; i++) {
-            if (misClientes[i] != null) {
-                if (misClientes[i].getNit().equals(nit)) {
-                    duplicado = true;
-                }
-            }
-        }
-        return duplicado;
     }
 
 }
